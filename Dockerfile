@@ -14,5 +14,5 @@ RUN cargo build --release
 ENV PORT 8088
 
 # Run the web service on container startup.
-CMD ["./target/debug/simple_server.exe"]
+CMD ["cargo","run"]
 
