@@ -1,18 +1,11 @@
-# Use the official Rust image.
-# https://hub.docker.com/_/rust
-FROM rust:1.60.0
 
-# Copy local code to the container image.
+FROM rust:1.60.0 as build-env
+
 WORKDIR /usr/src/app
 COPY . .
 
-# Install production dependencies and build a release artifact.
-RUN cargo build --release
+RUN cargo build
 
-# Service must listen to $PORT environment variable.
-# T his default value facilitates local development.
-ENV PORT 8088
-
-# Run the web service on container startup.
-CMD ["./target/debug/simple_server.exe"]
-
+FROM gcr.io/distroless/cc
+COPY --from=build-env /usr/src/app/target/debug/plant-server /
+CMD ["./plant-server"]
